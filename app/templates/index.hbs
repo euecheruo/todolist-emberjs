@@ -4,77 +4,76 @@
 		{{input type="text" class="new-todo" placeholder="What needs to be done?" value=newTask enter="addTask"}}
 	</header>
 	<section id="main">
-		{{input type="checkbox" class="toggle-all" id=taskComplete name=taskComplete checked=taskComplete}}
 		<label for="toggle-all">Mark all as complete</label>
 		<ul id="todo-list">
 		{{#if isDisplayedAll}}
 
 		  {{#each model as |task|}}
-		  
+
 		  	{{#unless task.deleted}}
-		  	
+
 				<li class="{{if task.completed "completed" ""}} {{if task.editing "editing" ""}}">
 					<div class="view">
-						{{input type="checkbox" class="toggle" id=task.name name=task.name checked=task.completed click=(action "toggleCompleted" task)}}
-						<label {{action "showEdit" task on="doubleClick"}}>{{task.title}}</label>
+  					{{input type="checkbox" class="toggle" id=task.name name=task.name checked=task.completed click=(action (queue (toggle "toggleTaskCompleted" this) (action "saveTaskCompleted" task) ) ) }}
+						<label {{action "showEdit" task on="click"}}>{{task.title}}</label>
 						<button {{action "destroyTask" task}} class="destroy"></button>
 					</div>
 					<label class="error {{if task.error "" "hidden"}}">{{task.error}}</label>
 					{{input type="text" class="edit" value=task.title enter="editTask"}}
 				</li>
-				
+
 			{{/unless}}
-			
-		  {{/each}}				
-		
+
+		  {{/each}}
+
 		{{else if isDisplayedActive}}
-		
+
 		  {{#each model as |task|}}
-		  
+
 			{{#unless task.completed}}
-		  
+
 			  	{{#unless task.deleted}}
-			  	
+
 					<li class="{{if task.completed "completed" ""}} {{if task.editing "editing" ""}}">
 						<div class="view">
-							{{input type="checkbox" class="toggle" id=task.name name=task.name checked=task.completed click=(action "toggleCompleted" task)}}
-							<label {{action "showEdit" task on="doubleClick"}}>{{task.title}}</label>
+  						{{input type="checkbox" class="toggle" id=task.name name=task.name checked=task.completed click=(action (queue (toggle "toggleTaskCompleted" this) (action "saveTaskCompleted" task) ) ) }}
+							<label {{action "showEdit" task on="click"}}>{{task.title}}</label>
 							<button {{action "destroyTask" task}} class="destroy"></button>
 						</div>
 						<label class="error {{if task.error "" "hidden"}}">{{task.error}}</label>
 						{{input type="text" class="edit" value=task.title enter="editTask"}}
 					</li>
-					
-				{{/unless}}			
 
-			{{/unless}}			
+				{{/unless}}
 
-		  {{/each}}				
-		
+			{{/unless}}
+
+		  {{/each}}
+
 		{{else if isDisplayedCompleted}}
-		
+
 		  {{#each model as |task|}}
-		  
+
 			{{#if task.completed}}
-		  
+
 			  	{{#unless task.deleted}}
-			  	
+
 					<li class="{{if task.completed "completed" ""}} {{if task.editing "editing" ""}}">
 						<div class="view">
-							{{input type="checkbox" class="toggle" id=task.name name=task.name checked=task.completed click=(action "toggleCompleted" task)}}
-							<label {{action "showEdit" task on="doubleClick"}}>{{task.title}}</label>
+  						{{input type="checkbox" class="toggle" id=task.name name=task.name checked=task.completed click=(action (queue (toggle "toggleTaskCompleted" this) (action "saveTaskCompleted" task) ) ) }}
+  						<label {{action "showEdit" task on="click"}}>{{task.title}}</label>
 							<button {{action "destroyTask" task}} class="destroy"></button>
 						</div>
 						<label class="error {{if task.error "" "hidden"}}">{{task.error}}</label>
 						{{input type="text" class="edit" value=task.title enter="editTask"}}
 					</li>
-				
-				{{/unless}}			
 
-			{{/if}}			
+				{{/unless}}
 
-		  {{/each}}				
-		
+			{{/if}}
+
+		  {{/each}}
+
 		{{/if}}
 		</ul>
 	</section>
@@ -86,4 +85,4 @@
 			<li><a class="filter selected" {{action "displayCompleted" preventDefault=false}}>Completed</a></li>
 		</ul>
 	</footer>
-</section>  
+</section>
