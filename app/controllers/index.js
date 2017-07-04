@@ -10,6 +10,7 @@ export default Ember.Controller.extend({
 	addTaskError: "",
 	lock: false,
 	count: 0,
+	oldCount: 0,
 	total: 0,
 	getCounter() {
 		let count = 0,
@@ -29,7 +30,7 @@ export default Ember.Controller.extend({
 		let count = 0,
 				model = this.get('model');
 
-    model.forEach((taskItem, index) => {
+    model.forEach((taskItem) => {
 			if (!taskItem.get('completed') && !taskItem.get('deleted')) {
 				count++;
 			}
@@ -38,14 +39,38 @@ export default Ember.Controller.extend({
   }.observes('model.@each.completed'),
 	actions: {
 		saveTaskCompleted(task) {
-			task.save();
-		},
-		toggleTaskCompleted(task) {
+			let self = this;
+
+  			self.set('lock', true);
+
+      /**
+       * Simple checker that allow for handling of conflict due to how
+       * input check box helper handles actions on different browsers.
+       *
+       * Problem occurs on some browsers like Safari where it does a two-way bind that
+       * updates the models property attached to is checked attribute before being called
+       * action helper is called. In other browsers this model property does not get
+       * updated by the checked attribute. Using `taskCompletedDidChange` method
+       * as a reference checker to see if checked attribute has already toggled/altered
+       * the value of the property.
+       */
+			  if (this.get('oldCount') === this.get('count')) {
+			    if (task.get('completed')) {
+  			    task.set('completed', false);
+			    } else {
+  			    task.set('completed', true);
+			    }
+			  }
+
+		  	task.save().then(function() {
+	  		  self.set('lock', false);
+	  		  self.set('oldCount', self.getCounter());
+  			});
+
 		},
 		addTask() {
-
 			let title  = this.get('newTask'),
-			    controller = this;
+			    self = this;
 
 		  this.set('lock', true);
 
@@ -72,7 +97,8 @@ export default Ember.Controller.extend({
 				this.set('addTaskError', '');
 
 			  task.save().then(function() {
-				  controller.set('lock', false);
+				  self.set('lock', false);
+				  self.set('oldCount', self.getCounter());
 			  });
 
 			}
@@ -95,7 +121,7 @@ export default Ember.Controller.extend({
 		editTask() {
 
 			let title  = this.get('currentTask').get('title'),
-			    controller = this;
+			    self = this;
 
 			this.set('lock', true);
 
@@ -114,15 +140,14 @@ export default Ember.Controller.extend({
 				this.set('doNotShowEdit', false);
 
 				this.get('currentTask').save().then(function() {
-				  controller.set('lock', false);
+				  self.set('lock', false);
 			  });
 
 			}
 
 		},
 		destroyTask(task) {
-
-      let controller = this;
+      let self = this;
 
       this.set('lock', true);
 			task.set('deleted', true);
@@ -134,7 +159,8 @@ export default Ember.Controller.extend({
 
 			this.get('store').findRecord('task', task.get('id'), { backgroundReload: false }).then(function(taskItem) {
 			  taskItem.destroyRecord();
-			  controller.set('lock', false);
+			  self.set('lock', false);
+			  self.set('oldCount', self.getCounter());
 			});
 
 	  },
@@ -144,6 +170,7 @@ export default Ember.Controller.extend({
 	    this.set('isDisplayedActive', false);
 	    this.set('isDisplayedCompleted', false);
 	    this.set('count', this.getCounter());
+	    this.set('oldCount', this.get('count'));
 
 	  },
 	  displayCompleted() {
@@ -152,6 +179,7 @@ export default Ember.Controller.extend({
 	    this.set('isDisplayedActive', false);
 	    this.set('isDisplayedCompleted', true);
 	    this.set('count', this.getCounter());
+	    this.set('oldCount', this.get('count'));
 
 	  },
 	  displayActive() {
@@ -160,6 +188,7 @@ export default Ember.Controller.extend({
 	    this.set('isDisplayedActive', true);
 	    this.set('isDisplayedCompleted', false);
 	    this.set('count', this.getCounter());
+	    this.set('oldCount', this.get('count'));
 
 	  },
 	}

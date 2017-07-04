@@ -14,7 +14,7 @@
 
 				<li class="{{if task.completed "completed" ""}} {{if task.editing "editing" ""}}">
 					<div class="view">
-  					{{input type="checkbox" class="toggle" id=task.name name=task.name checked=task.completed click=(action (queue (toggle "toggleTaskCompleted" this) (action "saveTaskCompleted" task) ) ) }}
+    				{{input type="checkbox" class="toggle" id=task.name name=task.name checked=task.completed click=(action "saveTaskCompleted" task)}}
 						<label {{action "showEdit" task on="click"}}>{{task.title}}</label>
 						<button {{action "destroyTask" task}} class="destroy"></button>
 					</div>
@@ -36,8 +36,8 @@
 
 					<li class="{{if task.completed "completed" ""}} {{if task.editing "editing" ""}}">
 						<div class="view">
-  						{{input type="checkbox" class="toggle" id=task.name name=task.name checked=task.completed click=(action (queue (toggle "toggleTaskCompleted" this) (action "saveTaskCompleted" task) ) ) }}
-							<label {{action "showEdit" task on="click"}}>{{task.title}}</label>
+      				{{input type="checkbox" class="toggle" id=task.name name=task.name checked=task.completed click=(action "saveTaskCompleted" task)}}
+  						<label {{action "showEdit" task on="click"}}>{{task.title}}</label>
 							<button {{action "destroyTask" task}} class="destroy"></button>
 						</div>
 						<label class="error {{if task.error "" "hidden"}}">{{task.error}}</label>
@@ -60,7 +60,7 @@
 
 					<li class="{{if task.completed "completed" ""}} {{if task.editing "editing" ""}}">
 						<div class="view">
-  						{{input type="checkbox" class="toggle" id=task.name name=task.name checked=task.completed click=(action (queue (toggle "toggleTaskCompleted" this) (action "saveTaskCompleted" task) ) ) }}
+    				{{input type="checkbox" class="toggle" id=task.name name=task.name checked=task.completed click=(action "saveTaskCompleted" task)}}
   						<label {{action "showEdit" task on="click"}}>{{task.title}}</label>
 							<button {{action "destroyTask" task}} class="destroy"></button>
 						</div>
