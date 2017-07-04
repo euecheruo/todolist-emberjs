@@ -47,10 +47,11 @@ export default Ember.Controller.extend({
        * Simple checker that allow for handling of conflict due to how
        * input check box helper handles actions on different browsers.
        *
-       * Problem occurs on some browsers like Safari where it does a two-way bind that
-       * updates the models property attached to is checked attribute before being called
-       * action helper is called. In other browsers this model property does not get
-       * updated by the checked attribute. Using `taskCompletedDidChange` method
+       * Problem occurs on some browsers like Safari when using `input (checkbox) helper`
+       * where it does a two-way bind that updates the models property attached
+       * to the `checked` attribute before being called action helper is called.
+       * In other browsers this model property does not get updated
+       * by the `checked` attribute. Using `taskCompletedDidChange` method
        * as a reference checker to see if checked attribute has already toggled/altered
        * the value of the property.
        */
